@@ -81,6 +81,9 @@ export class RegistrarComponent implements OnInit {
 	get cuentanoValido() {
 		return this.datosTransferencia.get('cuenta')!.invalid && this.datosTransferencia.get('cuenta')!.touched;
 	}
+	get tipoCuentanoValido() {
+		return this.datosTransferencia.get('tipo_cuenta')!.invalid && this.datosTransferencia.get('cuenta')!.touched;
+	}
 
 	get rut() {
 		return this.datosTransferencia.get('rut') as FormControl;
@@ -118,7 +121,7 @@ export class RegistrarComponent implements OnInit {
 			rut: ['', [Validators.required]],
 			telefono: ['', [Validators.required]],
 			cuenta: ['', [Validators.required]],
-			tipoCuenta: ['', [Validators.required]],
+			tipo_cuenta: ['', [Validators.required]],
 			banco: ['', [Validators.required]],
 		});
 	}
@@ -160,22 +163,26 @@ export class RegistrarComponent implements OnInit {
 						}
 					})
 					.catch((error) => {
-						this.router.navigateByUrl('/result-fail', {
+						console.log(error.message);
+						Swal.fire(`Se fue a la verga TODO! ${error.message}`);
+						/* this.router.navigateByUrl('/', {
 							state: {
 								header: 500,
 								subheader: 'a la verga',
 								message: error.message,
 							},
-						});
+						}); */
 					});
 			},
 		}).then((result) => {
 			if (result.isConfirmed) {
-				this.router.navigateByUrl('/result-success', {
+				console.log(result.value);
+				Swal.fire(`Los datos fueron guardados correctamente`);
+				/* this.router.navigateByUrl('/', {
 					state: {
 						message: 'Todo OK, eres vergatario',
 					},
-				});
+				}); */
 			}
 		});
 	}

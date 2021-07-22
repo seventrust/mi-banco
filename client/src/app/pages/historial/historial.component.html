@@ -13,12 +13,12 @@
 		  </tr>
 		</thead>
 		<tbody>
-		  <tr>
-			<th scope="row">1</th>
-			<td>Yerffrey</td>
-			<td>2021-07-20</td>
-			<td>Ripley</td>
-			<td>{{20000 | currency: 'CLP'}}</td>
+		  <tr *ngFor="let hist of historial; let i = index">
+			<th scope="row">{{i}}</th>
+			<td>{{hist.nombre}}</td>
+			<td>{{hist.fecha}}</td>
+			<td>{{hist.banco}}</td>
+			<td>{{hist.monto | currency: 'CLP'}}</td>
 		  </tr>
 		</tbody>
 	  </table>

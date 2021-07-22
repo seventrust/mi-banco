@@ -1,7 +1,108 @@
-<h1>Bienvenido a tu portal de transferencias super chévere</h1>
-<hr />
-<div class="row">
-	<div class="col">
-		Bienvenido usuario
+<div class="container mt-5 mb-4" *ngIf="alreadyLogged == false">
+	<div class="col-sm-8 ml-auto mr-auto">
+	  <ul class="nav nav-pills nav-fill mb-1" id="pills-tab" role="tablist">
+		<li class="nav-item"> <a class="nav-link active" id="pills-signin-tab" data-toggle="pill" href="#pills-signin" role="tab" aria-controls="pills-signin" aria-selected="true">Login</a> </li>
+		<li class="nav-item"> <a class="nav-link" id="pills-signup-tab" data-toggle="pill" href="#pills-signup" role="tab" aria-controls="pills-signup" aria-selected="false">Registrarse</a> </li>
+	  </ul>
+	  <div class="tab-content" id="pills-tabContent">
+		<div class="tab-pane fade show active" id="pills-signin" role="tabpanel" aria-labelledby="pills-signin-tab">
+		  <div class="col-sm-12 border border-primary shadow rounded pt-2">
+			<!-- <div class="text-center"><img src="https://placehold.it/80x80" class="rounded-circle border p-1"></div> -->
+			<form id="loginform" autocomplete="off" (ngSubmit)="submitLogin()" [formGroup]="datosLogin">
+			  <div class="form-group">
+				<label class="font-weight-bold">RUT <span class="text-danger">*</span></label>
+				<small *ngIf="rutNoValido" class="danger">El RUT ingresado no es correcto</small>
+				<!-- RUT -->
+				<input
+					type="text"
+					name="email"
+					formControlName="rut"
+					class="form-control"
+					placeholder="RUT"
+					[class.is-invalid]="rutNoValidoLogin"
+					(keyup)="verificarRut($event)"
+
+				/>
+			  </div>
+
+			  <!-- Email -->
+			  <div class="form-group">
+				<label class="font-weight-bold">Email <span class="text-danger">*</span></label>
+				<small *ngIf="emailNoValidoLogin" class="danger">Email no válido</small>
+				<input
+					type="email"
+					id="password"
+					class="form-control"
+					placeholder="Email"
+					formControlName="email"
+					[class.is-invalid]="emailNoValidoLogin"
+				/>
+
+			  </div>
+			  <div class="form-group">
+				<input type="submit" name="submit" value="Login" class="btn btn-block btn-primary">
+			  </div>
+			</form>
+		  </div>
+		</div>
+		<div class="tab-pane fade" id="pills-signup" role="tabpanel" aria-labelledby="pills-signup-tab">
+		  <div class="col-sm-12 border border-primary shadow rounded pt-2">
+			<!-- <div class="text-center"><img src="https://placehold.it/80x80" class="rounded-circle border p-1"></div> -->
+			<form id="registroform" autocomplete="off" (ngSubmit)="submitRegistro()" [formGroup]="datosRegistro">
+				<div class="form-group">
+					<label class="font-weight-bold">RUT <span class="text-danger">*</span></label>
+					<small *ngIf="rutNoValido" class="danger">El RUT ingresado no es correcto</small>
+					<!-- RUT -->
+					<input
+						type="text"
+						name="email"
+						formControlName="rut"
+						class="form-control"
+						placeholder="RUT"
+						[class.is-invalid]="rutNoValido"
+						(keyup)="verificarRut($event)"
+
+					/>
+				  </div>
+				  <!-- Nombre -->
+				  <div class="form-group">
+					<label class="font-weight-bold">Nombre <span class="text-danger">*</span></label>
+					<small *ngIf="nombreNoValido" class="danger">Campo requirido</small>
+					<input
+						type="text"
+						id="password"
+						class="form-control"
+						placeholder="Nombre"
+						formControlName="nombre"
+						[class.is-invalid]="nombreNoValido"
+					/>
+
+				  </div>
+				  <!-- Email -->
+				  <div class="form-group">
+					<label class="font-weight-bold">Email <span class="text-danger">*</span></label>
+					<small *ngIf="emailNoValido" class="danger">Email no válido</small>
+					<input
+						type="email"
+						id="password"
+						class="form-control"
+						placeholder="Email"
+						formControlName="email"
+						[class.is-invalid]="emailNoValido"
+					/>
+
+				  </div>
+				  <div class="form-group">
+					<input type="submit" name="submit" value="Sign In" class="btn btn-block btn-primary">
+				  </div>
+			</form>
+		  </div>
+		</div>
+	  </div>
 	</div>
+
+
+</div>
+<div class="container mt-5 mb-4" *ngIf="alreadyLogged == true">
+	<h1>Hola {{sesion.nombre}}, puedes hacer varias cosas</h1>
 </div>

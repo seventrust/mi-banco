@@ -4,12 +4,12 @@
  */
 
 export interface RequestData {
-	user_id?: number;
+	nombre: string;
+	apellido: string;
+	email: string;
 	rut_destinatario: string;
-	nombre_destinatario: string;
-	apellido_destinatario: string;
-	correo_destinatario: string;
-	telefono_destinatario: string;
-	banco_destinatario: string;
-	cuenta_destinatario: number;
+	telefono: string;
+	banco: string;
+	tipo_cuenta: number;
+	numero_cuenta: number;
 }

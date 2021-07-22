@@ -3,7 +3,7 @@ export interface ListaHistorial {
 }
 
 export interface Historial {
-	destinatario: string;
+	nombre: string;
 	rut: string;
 	banco: string;
 	tipo_cuenta: string;

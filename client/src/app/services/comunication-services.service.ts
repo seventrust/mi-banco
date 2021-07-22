@@ -32,15 +32,16 @@ export class ComunicationService {
 		//TODO: Definir el objeto que debe ser enviado al servicio
 		let requestData: RequestData = {
 			rut_destinatario: clean(data.rut),
-			nombre_destinatario: data.nombre.trim(),
-			apellido_destinatario: data.apelido.trim(),
-			correo_destinatario: data.correo.trim(),
-			telefono_destinatario: data.telefono.trim(),
-			banco_destinatario: data.banco.trim(),
-			cuenta_destinatario: parseInt(data.cuenta.trim()),
+			nombre: data.nombre.trim(),
+			apellido: data.apellido.trim(),
+			email: data.email.trim(),
+			telefono: data.telefono.trim(),
+			banco: data.banco.trim(),
+			numero_cuenta: data.cuenta.trim(),
+			tipo_cuenta: data.tipo_cuenta.trim(),
 		};
 
-		return this._client.post<HttpResponse<any>>(`${environment.apiUrl}/v1/registro`, requestData, {}).toPromise();
+		return this._client.post<HttpResponse<any>>(`${environment.apiUrl}/cuentas`, requestData, {}).toPromise();
 	}
 
 	/**
@@ -48,18 +49,41 @@ export class ComunicationService {
 	 */
 
 	public obtenerDestinatarios(userId: any): Observable<any> {
-		return this._client.get(`${environment.apiUrl}/v1/destinatarios`, {
+		return this._client.get(`${environment.apiUrl}/destinatarios`, {
 			params: {
 				user_id: userId,
 			},
 		});
 	}
 
-	public obtenerHistorial(userId: any): Observable<HttpResponse<ListaHistorial>> {
-		return this._client.get<HttpResponse<ListaHistorial>>(`${environment.apiUrl}/v1/historial`, {
+	public obtenerHistorial(rut: any): Observable<HttpResponse<ListaHistorial[]>> {
+		return this._client.get<HttpResponse<ListaHistorial[]>>(`${environment.apiUrl}/historial`, {
 			params: {
-				user_id: userId,
+				rut,
 			},
 		});
+	}
+
+	public usuarioLogin(data: any): Observable<HttpResponse<any>> {
+		return this._client.get<HttpResponse<any>>(`${environment.apiUrl}/usuario`, {
+			params: {
+				rut: data.rut.trim(),
+				email: data.email.trim(),
+			},
+		});
+	}
+
+	public registroUsuario(data: any): Promise<HttpResponse<any>> {
+		return this._client
+			.post<HttpResponse<any>>(
+				`${environment.apiUrl}/usuario`,
+				{
+					nombre: data.nombre.trim(),
+					email: data.email.trim(),
+					rut: clean(data.rut.trim()),
+				},
+				{}
+			)
+			.toPromise();
 	}
 }
