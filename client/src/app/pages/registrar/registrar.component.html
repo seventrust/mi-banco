@@ -1,0 +1,93 @@
+<div class="container-fluid">
+	<div class="row justify-content-center">
+		<div class="col-12 col-sm-9 col-md-7 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+			<form id="msform" autocomplete="off" (ngSubmit)="enviarFormulario()" [formGroup]="datosTransferencia">
+				<!--RUT-->
+				<label class="fieldlabels">RUT: *</label>
+				<small *ngIf="rutNoValido" class="danger">El RUT ingresado no es correcto</small>
+				<input
+					type="text"
+					class="form-control"
+					formControlName="rut"
+					placeholder="RUT"
+					[class.is-invalid]="rutNoValido"
+					(keyup)="verificarRut($event)"
+				/>
+				<!--Nombre-->
+				<label class="fieldlabels">Nombre: *</label>
+				<small *ngIf="nombreNoValido" class="danger">Campo requirido</small>
+				<input
+					type="text"
+					class="form-control"
+					placeholder="Nombre"
+					formControlName="nombre"
+					[class.is-invalid]="nombreNoValido"
+				/>
+				<!--Apellido-->
+				<label class="fieldlabels">Apellido: *</label>
+				<small *ngIf="apellidoNoValido" class="danger">Campo requirido</small>
+				<input
+					type="text"
+					class="form-control"
+					placeholder="Apellido"
+					formControlName="apellido"
+					[class.is-invalid]="apellidoNoValido"
+				/>
+
+				<!-- EMAIL -->
+				<label for="" class="fieldlabels"> Email: *</label>
+				<small *ngIf="emailNoValido" class="danger">Email no válido</small>
+				<input
+					type="email"
+					class="form-control"
+					placeholder="Email"
+					formControlName="email"
+					[class.is-invalid]="emailNoValido"
+				/>
+
+				<!-- Telefono -->
+				<label for="" class="fieldlabels"> Fono: *</label>
+				<small *ngIf="emailNoValido" class="danger">Fono no válido</small>
+				<input
+					type="phone"
+					class="form-control"
+					placeholder="Fono"
+					formControlName="telefono"
+					[class.is-invalid]="telefonoNoValido"
+				/>
+
+				<!--BANCO-->
+				<label class="fieldlabels">Banco: *</label>
+				<select name="" id="" class="form-control" formControlName="banco">
+					<option value="0" class="option" [selected]="true">-- Seleccione --</option>
+					<option *ngFor="let banco of bancos.banks" [value]="banco.id">
+						{{ banco.name }}
+					</option>
+				</select>
+
+				<!--Tipo de Cuenta-->
+				<label class="fieldlabels">Tipo de cuenta: *</label>
+				<select name="" id="" class="form-control" formControlName="tipo_cuenta">
+					<option value="0" class="option" [selected]="true">-- Seleccione --</option>
+					<option value="1" class="option" >Cuenta Vista / RUT</option>
+					<option value="2" class="option" >Cuenta Ahorros</option>
+					<option value="3" class="option" >Cuenta Corriente</option>
+
+				</select>
+
+				<!--Numero de Cuenta-->
+				<label class="fieldlabels">Número de cuenta: *</label>
+				<small *ngIf="cuentanoValido" class="danger">Campo requirido</small>
+				<input
+					type="text"
+					class="form-control"
+					placeholder="Número de cuenta"
+					formControlName="cuenta"
+					[class.is-invalid]="cuentanoValido"
+				/>
+
+				<button class="btn btn-success" type="submit" name="submit" >Registrar</button>
+			</form>
+		</div>
+	</div>
+</div>
