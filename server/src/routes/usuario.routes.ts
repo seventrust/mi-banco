@@ -1,4 +1,5 @@
 import express from 'express';
+import { User } from '../interface/user.interface';
 import { UsuarioController } from '../controllers/usuario.controller';
 
 /**
@@ -10,57 +11,92 @@ export class Usuario {
 
 	public async index(req: express.Request, res: express.Response) {
 		this.usuarioController = new UsuarioController();
-		try {
-			//Extraccion del metdo HTTP desde la interfaz Request
-			let { method } = req;
 
-			switch (method.toUpperCase()) {
-				case 'GET':
-					let { rut } = req.query;
-					if (rut != null) {
-						let resultGet = await this.usuarioController.obtenerUsuario(rut.toString());
-						if (resultGet == null) {
-							res.json({
-								statusCode: 404,
-								response: `El usuario no se encuentra en la base de datos`,
+		//Extraccion del metdo HTTP desde la interfaz Request
+		let { method } = req;
+
+		switch (method.toUpperCase()) {
+			case 'GET':
+				try {
+					let { rut, password } = req.query;
+					console.log(rut, password);
+					if (null != rut && null != password) {
+						let resultGet: User = await this.usuarioController.obtenerUsuario(
+							rut.toString(),
+							password.toString()
+						);
+						console.log(resultGet);
+						//* Validar si el resultado devolvio valores
+						if (undefined != resultGet) {
+							res.status(200).send({
+								ok: true,
+								body: { usuario: resultGet },
+							});
+						} else {
+							//! No se encontraron destinatarios!!!
+							res.status(404).send({
+								ok: false,
+								body: { message: `${rut} no existe o contrasena no existe` },
 							});
 						}
-						res.json({
-							statusCode: 200,
-							response: resultGet,
+					} else {
+						//! Sin RUT no se puede realizar una busqueda
+						res.status(401).send({
+							ok: false,
+							body: { message: `Sin RUT y sin Password no puedo buscar -.-' ` },
 						});
 					}
-
-					break;
-				case 'POST':
-					let resultPost = await this.usuarioController.nuevoUsuario(req.body);
-					if (resultPost == null) {
-						res.json({
-							statusCode: 401,
-							response: `ocurrio un error en la creacion de usuario, por favor intente nuevamente`,
-						});
-					}
-					res.json({
-						statusCode: 200,
-						response: {
-							usuarioAgregado: true,
-							registroActualizado: true,
-							usuario: resultPost,
+				} catch (error) {
+					//! Error interno del servidor no mostrar en cliente
+					res.status(500).send({
+						ok: false,
+						body: {
+							message: `Error interno del servidor `,
+							error: error.message,
 						},
 					});
-				default:
-					res.send({
-						statusCode: 404,
-						message: 'No existe el metodo',
+				}
+
+				break;
+			case 'POST':
+				try {
+					if (Object.keys(req.body).length > 0) {
+						let resultPost = await this.usuarioController.nuevoUsuario(req.body);
+						if (resultPost) {
+							//* Si la transferencia se guardo correctactmente devolver estado OK
+							res.status(200).send({
+								ok: true,
+								body: {
+									usuario: resultPost,
+								},
+							});
+						} else {
+							//! No se guardo la transferencia error no encontrado
+							res.status(401).send({
+								ok: false,
+								body: { message: `No se guardo el nuevo usuario` },
+							});
+						}
+					} else {
+						//! Sin RUT no se puede realizar una busqueda y actualizacion
+						res.status(401).send({
+							ok: false,
+							body: { message: `Entrega un rut -.-' ` },
+						});
+					}
+				} catch (error) {
+					//! Error interno del servidor no mostrar en cliente
+					res.status(500).send({
+						ok: false,
+						body: {
+							message: `Error interno del servidor `,
+							error: error.message,
+						},
 					});
-					break;
-			}
-		} catch (error) {
-			res.send({
-				statusCode: 500,
-				message: error.message,
-			});
-			console.error(error.message);
+				}
+
+			default:
+				break;
 		}
 	}
 }

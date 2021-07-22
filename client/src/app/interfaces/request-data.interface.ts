@@ -8,6 +8,7 @@ export interface RequestData {
 	apellido: string;
 	email: string;
 	rut_destinatario: string;
+	rut_cliente: string;
 	telefono: string;
 	banco: string;
 	tipo_cuenta: number;

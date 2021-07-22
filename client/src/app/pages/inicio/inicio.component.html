@@ -15,7 +15,7 @@
 				<!-- RUT -->
 				<input
 					type="text"
-					name="email"
+					name="rut"
 					formControlName="rut"
 					class="form-control"
 					placeholder="RUT"
@@ -25,17 +25,16 @@
 				/>
 			  </div>
 
-			  <!-- Email -->
+			  <!-- Password -->
 			  <div class="form-group">
-				<label class="font-weight-bold">Email <span class="text-danger">*</span></label>
-				<small *ngIf="emailNoValidoLogin" class="danger">Email no válido</small>
+				<label class="font-weight-bold">Password <span class="text-danger">*</span></label>
+				<small *ngIf="passwordNoValidoLogin" class="danger">min 8 letras o numeros</small>
 				<input
-					type="email"
-					id="password"
+					type="password"
 					class="form-control"
-					placeholder="Email"
-					formControlName="email"
-					[class.is-invalid]="emailNoValidoLogin"
+					placeholder="*******"
+					formControlName="password"
+					[class.is-invalid]="passwordNoValidoLogin"
 				/>
 
 			  </div>
@@ -55,7 +54,7 @@
 					<!-- RUT -->
 					<input
 						type="text"
-						name="email"
+						name="rut"
 						formControlName="rut"
 						class="form-control"
 						placeholder="RUT"
@@ -76,7 +75,20 @@
 						formControlName="nombre"
 						[class.is-invalid]="nombreNoValido"
 					/>
+					<!-- Password -->
+					<div class="form-group">
+						<label class="font-weight-bold">Password <span class="text-danger">*</span></label>
+						<small *ngIf="passwordNoValidoRegistro" class="danger">min 8 letras o numeros</small>
+						<input
+							type="password"
+							id="password"
+							class="form-control"
+							placeholder="Email"
+							formControlName="email"
+							[class.is-invalid]="passwordNoValidoRegistro"
+						/>
 
+					</div>
 				  </div>
 				  <!-- Email -->
 				  <div class="form-group">
@@ -84,7 +96,6 @@
 					<small *ngIf="emailNoValido" class="danger">Email no válido</small>
 					<input
 						type="email"
-						id="password"
 						class="form-control"
 						placeholder="Email"
 						formControlName="email"
@@ -104,5 +115,5 @@
 
 </div>
 <div class="container mt-5 mb-4" *ngIf="alreadyLogged == true">
-	<h1>Hola {{sesion.nombre}}, puedes hacer varias cosas</h1>
+	<h1>Hola {{sesion.usuario.nombre}}, puedes hacer varias cosas</h1>
 </div>

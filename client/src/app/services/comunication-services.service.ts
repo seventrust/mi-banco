@@ -28,7 +28,7 @@ export class ComunicationService {
 	 * @return Observable
 	 */
 
-	public guardarFormulario(data: any): Promise<HttpResponse<any>> {
+	public guardarFormulario(rut_cliente: string, data: any): Promise<HttpResponse<any>> {
 		//TODO: Definir el objeto que debe ser enviado al servicio
 		let requestData: RequestData = {
 			rut_destinatario: clean(data.rut),
@@ -39,6 +39,7 @@ export class ComunicationService {
 			banco: data.banco.trim(),
 			numero_cuenta: data.cuenta.trim(),
 			tipo_cuenta: data.tipo_cuenta.trim(),
+			rut_cliente: clean(rut_cliente.trim()),
 		};
 
 		return this._client.post<HttpResponse<any>>(`${environment.apiUrl}/cuentas`, requestData, {}).toPromise();
@@ -56,10 +57,10 @@ export class ComunicationService {
 		});
 	}
 
-	public obtenerHistorial(rut: any): Observable<HttpResponse<ListaHistorial[]>> {
-		return this._client.get<HttpResponse<ListaHistorial[]>>(`${environment.apiUrl}/historial`, {
+	public obtenerHistorial(rut: any): Observable<ListaHistorial> {
+		return this._client.get<ListaHistorial>(`${environment.apiUrl}/transferencias`, {
 			params: {
-				rut,
+				rut: clean(rut),
 			},
 		});
 	}
@@ -67,8 +68,8 @@ export class ComunicationService {
 	public usuarioLogin(data: any): Observable<HttpResponse<any>> {
 		return this._client.get<HttpResponse<any>>(`${environment.apiUrl}/usuario`, {
 			params: {
-				rut: data.rut.trim(),
-				email: data.email.trim(),
+				rut: clean(data.rut.trim()),
+				password: data.password.trim(),
 			},
 		});
 	}
@@ -81,9 +82,16 @@ export class ComunicationService {
 					nombre: data.nombre.trim(),
 					email: data.email.trim(),
 					rut: clean(data.rut.trim()),
+					password: data.rut.trim(),
 				},
 				{}
 			)
 			.toPromise();
+	}
+
+	public buscarDestinatarios(rut: any): Observable<HttpResponse<any>> {
+		return this._client.get<HttpResponse<any>>(`${environment.apiUrl}/cuentas`, {
+			params: { rut: clean(rut.trim()) },
+		});
 	}
 }

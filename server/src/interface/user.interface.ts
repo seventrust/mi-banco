@@ -2,6 +2,7 @@ export interface User {
 	nombre: string;
 	email: string;
 	rut: string;
+	password?: string;
 	transferencia?: Transferencia[];
 	destinatarios?: Destinatarios[];
 }

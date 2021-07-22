@@ -15,39 +15,82 @@ export class Cuentas {
 
 		switch (method.toUpperCase()) {
 			case 'GET':
-				let { rut } = req.query;
-				let resultGet: Destinatarios[] =
-					(await this.cuentasController.obtenerDestinatarios(req.body.rut)) || [];
-
-				res.json({
-					statusCode: 200,
-					response: resultGet,
-				});
+				try {
+					let { rut } = req.query;
+					if (null != rut && rut.length > 0) {
+						let resultGet: Destinatarios[] = (await this.cuentasController.obtenerDestinatarios(rut)) || [];
+						//* Validar si el resultado devolvio valores
+						if (Object.keys(resultGet).length > 0) {
+							res.status(200).send({
+								ok: true,
+								body: { destinatarios: resultGet },
+							});
+						} else {
+							//! No se encontraron destinatarios!!!
+							res.status(404).send({
+								ok: false,
+								body: { message: `El cliente ${rut} no tiene destinatarios` },
+							});
+						}
+					} else {
+						//! Sin RUT no se puede realizar una busqueda
+						res.status(401).send({
+							ok: false,
+							body: { message: `Sin RUT no puedo buscar -.-' ` },
+						});
+					}
+				} catch (error) {
+					//! Error interno del servidor no mostrar en cliente
+					res.status(500).send({
+						ok: false,
+						body: {
+							message: `Error interno del servidor `,
+							error: error.message,
+						},
+					});
+				}
 
 				break;
 			case 'POST':
-				let { rut_cliente } = req.body;
-				let resultPost = await this.cuentasController.nuevoDestinatario(rut_cliente, req.body);
+				try {
+					let { rut_cliente } = req.body;
+					if (null != rut_cliente && rut_cliente.length > 0) {
+						let resultPost = await this.cuentasController.nuevoDestinatario(rut_cliente, req.body);
 
-				if (resultPost == null) {
-					res.json({
-						statusCode: 401,
-						response: `ocurrio un error en la creacion de destinatario, por favor intente nuevamente`,
+						if (resultPost) {
+							//* Si la transferencia se guardo correctactmente devolver estado OK
+							res.status(200).send({
+								ok: true,
+								body: {
+									message: `Destinatario guardado!`,
+								},
+							});
+						} else {
+							//! No se guardo la transferencia error no encontrado
+							res.status(401).send({
+								ok: false,
+								body: { message: `No se guardo la transferencia para el cliente ${rut_cliente}` },
+							});
+						}
+					} else {
+						//! Sin RUT no se puede realizar una busqueda y actualizacion
+						res.status(401).send({
+							ok: false,
+							body: { message: `Sin RUT no puedo buscar -.-' ` },
+						});
+					}
+				} catch (error) {
+					//! Error interno del servidor no mostrar en cliente
+					res.status(500).send({
+						ok: false,
+						body: {
+							message: `Error interno del servidor `,
+							error: error.message,
+						},
 					});
 				}
-				res.json({
-					statusCode: 200,
-					response: {
-						usuarioAgregado: true,
-						registroActualizado: true,
-						usuario: resultPost,
-					},
-				});
+
 			default:
-				res.send({
-					statusCode: 404,
-					message: 'No existe el metodo',
-				});
 				break;
 		}
 	}

@@ -10,11 +10,11 @@ export class UsuarioController {
 	 * @param number user_id
 	 * @return Transferencia transferencias
 	 */
-	public async obtenerUsuario(rut: string): Promise<User | undefined> {
+	public async obtenerUsuario(rut: string, password: string): Promise<User | undefined> {
 		//TODO?
 		//! Ahora viene lo bueno que es el acceso a los datos
 		try {
-			let user = await this.usermodel.obtenerUsuario(rut);
+			let user = await this.usermodel.obtenerUsuario(rut, password);
 			if (null !== user) {
 				console.log(user);
 				return user;
@@ -28,14 +28,14 @@ export class UsuarioController {
 	/**
 	 * Metodo para crear una transferencia hacia un destinatario
 	 */
-	public async nuevoUsuario(usuarioNuevo: UsuarioNuevo) {
+	public async nuevoUsuario(usuarioNuevo: UsuarioNuevo): Promise<User | undefined> {
 		try {
 			if (!usuarioNuevo.email || !usuarioNuevo.rut || !usuarioNuevo.nombre) {
-				return null;
+				return;
 			}
 			//por ahora no puedo revisar  el estado de la actualizacion
-			let doc = await this.usermodel.agregarNuevoUsuario(usuarioNuevo);
-			return doc;
+			let result = await this.usermodel.agregarNuevoUsuario(usuarioNuevo);
+			return result;
 		} catch (error) {
 			console.error(error.message);
 		}

@@ -2,12 +2,13 @@ export interface UsuarioNuevo {
 	nombre: string;
 	email: string;
 	rut: string;
+	password: string;
 }
 
 export interface TransferenciaNueva {
 	nombre: string;
 	email: string;
-	rut: string;
+	rut_transferencia: string;
 	banco: string;
 	tipo_cuenta: number;
 	monto: number;

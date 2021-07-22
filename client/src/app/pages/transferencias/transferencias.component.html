@@ -1,1 +1,6 @@
-<p>transferencias works!</p>
+<div class="container mt-5 mb-5">
+	<label>Search Here</label>&nbsp;&nbsp;<input type="text" (keyup)="searchOnKeyUp($event)" list="SearchResults" />
+	<datalist id="SearchResults">
+		<option *ngFor="let sr of resultados" [value]="sr">{{sr}}</option>
+	</datalist>
+</div>

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
 	<div class="container-fluid">
 
 	  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -11,4 +11,67 @@
 		</div>
 	  </div>
 	</div>
+  </nav> -->
+
+  <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<!-- Container wrapper -->
+	<div class="container-fluid">
+	  <!-- Toggle button -->
+	  <button
+		class="navbar-toggler"
+		type="button"
+		data-mdb-toggle="collapse"
+		data-mdb-target="#navbarSupportedContent"
+		aria-controls="navbarSupportedContent"
+		aria-expanded="false"
+		aria-label="Toggle navigation"
+	  >
+		<i class="fas fa-bars"></i>
+	  </button>
+
+	  <!-- Collapsible wrapper -->
+	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<!-- Navbar brand -->
+		<!-- <a class="navbar-brand mt-2 mt-lg-0" href="#">
+		  <img
+			src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png"
+			height="15"
+			alt=""
+			loading="lazy"
+		  />
+		</a> -->
+		<!-- Left links -->
+		<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+		  <li class="nav-item">
+			<a class="nav-link" routerLink="inicio" routerLinkActive="active" >Mi Banco</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" routerLink="transferencias" routerLinkActive="active">Transferencias </a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" routerLink="registrar" routerLinkActive="active">Nuevo Destinatario</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" routerLink="historial" routerLinkActive="active">Historial</a>
+		  </li>
+		</ul>
+		<!-- Left links -->
+	  </div>
+	  <!-- Collapsible wrapper -->
+
+	  <!-- Right elements -->
+	  <div class="d-flex align-items-center">
+
+		<!-- Logout -->
+		<ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="loggedIn">
+			<li class="nav-item">
+			  <button class="nav-link btn btn-outline-danger" (click)="cerrarSesion()">Logout</button>
+			</li>
+		</ul>
+	  </div>
+	  <!-- Right elements -->
+	</div>
+	<!-- Container wrapper -->
   </nav>
+  <!-- Navbar -->

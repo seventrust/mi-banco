@@ -3,8 +3,7 @@ import { json, urlencoded } from 'body-parser';
 import express from 'express';
 import { Usuario } from '../routes/usuario.routes';
 import { Cuentas } from '../routes/cuentas.routes';
-import { Historial } from '../routes/historial.routes';
-import { Transferencia } from '../routes/transferencia.routes';
+import { Transferencias } from '../routes/transferencia.routes';
 
 /**
  * El servidor que convierte la aplicacion en una API REST
@@ -75,19 +74,19 @@ class Server {
 		let router: express.Router;
 		router = express.Router();
 
-		let historial: Historial = new Historial();
+		/* let historial: Historial = new Historial();
 		//RUTA historial de transferencias
-		router.get('/historial', historial.index.bind(historial.index));
+		router.get('/historial', historial.index.bind(historial.index)); */
 
 		let cuentas: Cuentas = new Cuentas();
 		//RUTA inscribir cuentas o consultar por las cuentas de los usuarios
 		router.get('/cuentas', cuentas.index.bind(cuentas.index));
 		router.post('/cuentas', cuentas.index.bind(cuentas.index));
 
-		let transferencia: Transferencia = new Transferencia();
+		let transferencia: Transferencias = new Transferencias();
 		//RUTA realizar una  transferencia y guardar en base de datos
 		router.get('/transferencias', transferencia.index.bind(transferencia.index));
-		router.post('/transferencia', transferencia.index.bind(transferencia.index));
+		router.post('/transferencias', transferencia.index.bind(transferencia.index));
 
 		let user: Usuario = new Usuario();
 		router.get('/usuario', user.index.bind(user.index));
