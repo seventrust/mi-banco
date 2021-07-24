@@ -11,7 +11,7 @@ export class CuentasController {
 	 * @param number user_id
 	 * @return Transferencia transferencias
 	 */
-	public async obtenerDestinatarios(rut: string): Promise<Destinatarios[] | undefined> {
+	public async obtenerDestinatarios(rut: any): Promise<Destinatarios[] | undefined> {
 		try {
 			let destinatarios: Destinatarios[] = await this.usermodel.buscarDestinatarios(rut);
 			if (null !== destinatarios) {
@@ -27,16 +27,17 @@ export class CuentasController {
 	/**
 	 *
 	 */
-	public async nuevoDestinatario(rutCliente: string, destinatario: DestinatarioNuevo) {
+	public async nuevoDestinatario(rutCliente: string, destinatario: DestinatarioNuevo): Promise<boolean> {
 		try {
 			if (!destinatario.email || !destinatario.rut_destinatario || !destinatario.nombre) {
-				return null;
+				return false;
 			}
 			//por ahora no puedo revisar  el estado de la actualizacion
-			let doc = await this.usermodel.agregarNuevoDestinatario(rutCliente, destinatario);
-			return doc;
+			let result = await this.usermodel.agregarNuevoDestinatario(rutCliente, destinatario);
+			return result;
 		} catch (error) {
 			console.error(error.message);
+			return false;
 		}
 	}
 }

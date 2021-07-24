@@ -8,4 +8,5 @@ export interface Historial {
 	banco: string;
 	tipo_cuenta: string;
 	monto: number;
+	fecha: string;
 }

@@ -1,5 +1,5 @@
 
-<div class="container">
+<div class="container mt-4 mb-5">
 	<!-- Content here -->
 	<table class="table table-hover">
 		<thead>
@@ -13,14 +13,15 @@
 		  </tr>
 		</thead>
 		<tbody>
-		  <tr *ngFor="let hist of historial; let i = index">
-			<th scope="row">{{i}}</th>
+		  <tr *ngFor="let hist of historial.historial; index as i">
+			<th scope="row">{{i+1}}</th>
 			<td>{{hist.nombre}}</td>
-			<td>{{hist.fecha}}</td>
+			<td>{{hist.fecha | date :'short':'es'}}</td>
 			<td>{{hist.banco}}</td>
-			<td>{{hist.monto | currency: 'CLP'}}</td>
+			<td>{{hist.monto | currency : 'CLP' }}</td>
 		  </tr>
 		</tbody>
 	  </table>
+
 </div>
 

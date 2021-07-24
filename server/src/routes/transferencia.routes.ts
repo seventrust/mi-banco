@@ -1,74 +1,102 @@
 import express from 'express';
-import { Destinatarios } from '../interface/user.interface';
-import { UserModel } from '../models/user.model';
-
+import { Transferencia } from '../interface/user.interface';
+import { TransferenciaController } from '../controllers/transferencia.controller';
 /**
  * Crear la clase Transferencia con el metodo index de acceso libre por
  * metodo HTTP
  */
-export class Transferencia {
-	private usermodel: UserModel = new UserModel();
+export class Transferencias {
+	private transferenciaController!: TransferenciaController;
 
 	public async index(req: express.Request, res: express.Response) {
+		this.transferenciaController = new TransferenciaController();
 		//Extraccion del metdo HTTP desde la interfaz Request
 		let { method } = req;
 
 		switch (method.toUpperCase()) {
 			case 'GET':
-				let resultGet: Transferencia[] = (await this.obtenerTransferencias(req.body.rut)) || [];
-				res.json({
-					statusCode: 200,
-					response: resultGet,
-				});
+				try {
+					let { rut } = req.query;
+					if (null != rut && rut.length > 0) {
+						let resultGet: Transferencia[] =
+							(await this.transferenciaController.obtenerTransferencias(rut)) || [];
+
+						//* Validar si el resultado devolvio valores
+						if (Object.keys(resultGet).length > 0) {
+							//* Enviar respuesta OK al cliente
+							res.status(200).send({
+								ok: true,
+								body: { historial: resultGet },
+							});
+						} else {
+							//! No se encontraron transferencias!!!
+							res.status(404).send({
+								ok: false,
+								body: { message: `El cliente ${rut} no tiene transferencias` },
+							});
+						}
+					} else {
+						//! Sin RUT no se puede realizar una busqueda
+						res.status(401).send({
+							ok: false,
+							body: { message: `Sin RUT no puedo buscar -.-' ` },
+						});
+					}
+				} catch (error) {
+					res.status(500).send({
+						ok: false,
+						body: {
+							message: `Error interno del servidor `,
+							error: error.message,
+						},
+					});
+				}
 
 				break;
+
 			case 'POST':
-				let resultPost = this.nuevaTransferencia(req.body);
+				try {
+					//* Se extrae el rut_cliente de la peticion para el update
+					let { rut_cliente } = req.body;
+					//* Se llama a al metodo para guardar la transferencia
+					if (null != rut_cliente && rut_cliente.length > 0) {
+						let resultPost = await this.transferenciaController.nuevaTransferencia(rut_cliente, req.body);
 
-				res.json({
-					statusCode: 200,
-					response: {
-						usuarioAgregado: true,
-						registroActualizado: true,
-					},
-				});
+						if (resultPost) {
+							//* Si la transferencia se guardo correctactmente devolver estado OK
+							res.status(200).send({
+								ok: true,
+								body: {
+									message: `Transferencia guardada!`,
+								},
+							});
+						} else {
+							//! No se guardo la transferencia error no encontrado
+							res.status(401).send({
+								ok: false,
+								body: { message: `No se guardo la transferencia para el cliente ${rut_cliente}` },
+							});
+						}
+					} else {
+						//! Sin RUT no se puede realizar una busqueda y actualizacion
+						res.status(401).send({
+							ok: false,
+							body: { message: `Sin RUT no puedo buscar -.-' ` },
+						});
+					}
+				} catch (error) {
+					//! Error critico interno, no moistrar en cliente
+					res.status(500).send({
+						ok: false,
+						body: {
+							message: `Error interno del servidor `,
+							error: error.message,
+						},
+					});
+				}
+
 			default:
-				res.send({
-					statusCode: 404,
-					message: 'No existe el metodo',
-				});
 				break;
-		}
-	}
-
-	/**
-	 * Metodo para conexion a Mongo y obtener los datos del historial
-	 * de transferencias del usuario
-	 * @param number user_id
-	 * @return Transferencia transferencias
-	 */
-	private async obtenerTransferencias(rut: string): Promise<Transferencia[] | undefined> {
-		//TODO?
-		//! Ahora viene lo bueno que es el acceso a los datos
-		try {
-			let transferencias: Transferencia[] = await this.usermodel.buscarTransferencias(rut);
-			if (null !== transferencias) {
-				return transferencias;
-			}
-		} catch (error) {
-			console.error(error.message);
-		}
-	}
-
-	/**
-	 * Metodo para crear una transferencia hacia un destinatario
-	 */
-	private async nuevaTransferencia(params: any) {
-		try {
-			//por ahora no puedo revisar  el estado de la actualizacion
-			await this.usermodel.agregarNuevaTransferencia(params);
-		} catch (error) {
-			console.error(error.message);
 		}
 	}
 }

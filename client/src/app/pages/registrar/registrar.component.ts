@@ -91,16 +91,27 @@ export class RegistrarComponent implements OnInit {
 
 	//Obtener los datos para los campos SELECT
 	private async getBankList() {
-		this._cs.getBankList().subscribe((response: ListaBancos) => {
-			if (response) {
-				this.bancos = response;
-			} else {
-				Swal.fire({
-					title: 'Presentamos fallas en la comunicación',
-					toast: true,
-				});
-			}
-		});
+		let bancos = JSON.parse(localStorage.getItem('bancos') || '{}');
+		if (Object.keys(bancos).length > 0) {
+			this.bancos = bancos;
+		} else {
+			this._cs.getBankList().subscribe(
+				(response: ListaBancos) => {
+					if (response) {
+						this.bancos = response;
+						localStorage.setItem('bancos', JSON.stringify(this.bancos));
+						console.log('Registrar', JSON.stringify(this.bancos, null, 2));
+					}
+				},
+				(error: any) => {
+					Swal.fire({
+						title: 'Fallas en la comunicación',
+						text: `<p> ${error.message} <p>`,
+						toast: true,
+					});
+				}
+			);
+		}
 	}
 	/**
 	 * Metodo para instanciar el formulario Reactivo
@@ -154,30 +165,31 @@ export class RegistrarComponent implements OnInit {
 			preConfirm: () => {
 				//El metodo preConfirm de Swal permite ejecutar una llamada ASYNC al servicio y esperar
 				//la respuesta para continuar con la ejecución
-				return this._cs
-					.guardarFormulario(this.datosTransferencia.value)
-					.then((res) => {
-						if (res.ok) {
-							return res.body;
-						} else {
-						}
-					})
-					.catch((error) => {
-						console.log(error.message);
-						Swal.fire(`Se fue a la verga TODO! ${error.message}`);
-						/* this.router.navigateByUrl('/', {
-							state: {
-								header: 500,
-								subheader: 'a la verga',
-								message: error.message,
-							},
-						}); */
-					});
+				//Necesito recoger el rut del cliente
+				let login = JSON.parse(localStorage.getItem('login'));
+				if (Object.keys(login).length > 0) {
+					return this._cs
+						.guardarFormulario(login.usuario.rut, this.datosTransferencia.value)
+						.then((res) => {
+							if (res.ok) {
+								return res.body;
+							} else {
+								return null;
+							}
+						})
+						.catch((error) => {
+							console.log(error.message);
+							Swal.fire(`Ocurrio un error! ${error.message}`);
+						});
+				} else {
+					return null;
+				}
 			},
 		}).then((result) => {
 			if (result.isConfirmed) {
 				console.log(result.value);
 				Swal.fire(`Los datos fueron guardados correctamente`);
+				this.datosTransferencia.reset();
 				/* this.router.navigateByUrl('/', {
 					state: {
 						message: 'Todo OK, eres vergatario',

@@ -1,7 +1,7 @@
 import * as UserSchema from '../schemes/users.scheme';
 import { Destinatarios, Transferencia, User } from '../interface/user.interface';
 import { connect, model } from 'mongoose';
-import { DestinatarioNuevo, UsuarioNuevo } from '../interface/request.interface';
+import { DestinatarioNuevo, TransferenciaNueva, UsuarioNuevo } from '../interface/request.interface';
 
 export class UserModel {
 	constructor() {
@@ -24,7 +24,7 @@ export class UserModel {
 	/**
 	 * Agreagar/ registrar usuario en la BD
 	 */
-	public async agregarNuevoUsuario(usuario: UsuarioNuevo) {
+	public async agregarNuevoUsuario(usuario: UsuarioNuevo): Promise<User | undefined> {
 		try {
 			//Crear el modelo UserModel
 			let UserModel = model<User>('User', UserSchema.default);
@@ -33,36 +33,40 @@ export class UserModel {
 				nombre: usuario.nombre,
 				email: usuario.email,
 				rut: usuario.rut,
+				password: usuario.password,
 				destinatarios: [],
 				transferencia: [],
 			});
 
 			//Realizar transaccion
 			await doc.save();
-
-			return doc;
+			let createdUser: User = {
+				nombre: doc.nombre,
+				email: doc.email,
+				rut: doc.rut,
+				destinatarios: doc.destinatarios,
+				transferencia: doc.transferencia,
+			};
+			return createdUser;
 		} catch (error) {
 			console.error(error.message);
 		}
 	}
 
-	public async obtenerUsuario(rut: string): Promise<User | undefined> {
+	public async obtenerUsuario(rut: string, password: string): Promise<User | undefined> {
 		try {
 			//Crear el modelo UserModel
 			let UserModel = model<User>('User', UserSchema.default);
 
-			let doc = await UserModel.findOne({ rut }).exec();
+			let doc = await UserModel.findOne(
+				{ rut, password },
+				'nombre correo rut destinatarios transferencia'
+			).exec();
 
 			if (null !== doc) {
 				//*Se encontraron los destinatarios de la persona que quiere hacer la transferencia
-				console.error('QUEVERGAS');
-				let response: User = {
-					nombre: doc.nombre,
-					email: doc.email,
-					rut: doc.rut,
-					destinatarios: doc.destinatarios,
-					transferencia: doc.transferencia,
-				};
+
+				let response: User = doc;
 				return response;
 			}
 			return undefined;
@@ -76,7 +80,7 @@ export class UserModel {
 	 * @param usuarioNuevo  @type UsuarioNuevo
 	 *
 	 */
-	public async agregarNuevoDestinatario(rutCliente: string, destinatario: DestinatarioNuevo) {
+	public async agregarNuevoDestinatario(rutCliente: string, destinatario: DestinatarioNuevo): Promise<boolean> {
 		try {
 			//Crear el modelo UserModel
 			let UserModel = model<User>('User', UserSchema.default);
@@ -86,17 +90,23 @@ export class UserModel {
 				nombre: destinatario.nombre,
 				apellido: destinatario.apellido,
 				email: destinatario.email,
+				tipo_cuenta: destinatario.tipo_cuenta,
+				banco: destinatario.banco,
 				rut_destinatario: destinatario.rut_destinatario,
 				telefono: destinatario.telefono,
-				banco: destinatario.banco,
-				tipo_cuenta: destinatario.tipo_cuenta,
 				numero_cuenta: destinatario.numero_cuenta,
 			};
-			let doc = await UserModel.updateOne({ rut: rutCliente }, { $push: { destinatarios } });
+			console.log(destinatarios);
 
-			return doc;
+			let doc = await UserModel.updateOne({ rut: rutCliente }, { $push: { destinatarios } });
+			if (doc.ok == 1) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (error) {
 			console.error(error.message);
+			return false;
 		}
 	}
 
@@ -104,22 +114,27 @@ export class UserModel {
 	 * Metodo para agreagr una transferencia al usuario
 	 * @param params
 	 */
-	public async agregarNuevaTransferencia(params: any) {
+	public async agregarNuevaTransferencia(rutCliente: any, transferencia: TransferenciaNueva): Promise<boolean> {
 		try {
 			//* Crear el modelo UserModel
 			let UserModel = model<User>('User', UserSchema.default);
 			//* Se crea el objeto transferencia para guardar en la coleccion que s
 			//* coincida con el RUT que la realiz[o]
-			let transferencia: Transferencia = {
-				nombre: params.nombre,
-				banco: params.banco,
-				email: params.email,
-				rut: params.rut_transferencia,
-				monto: params.monto,
-				tipo_cuenta: params.tipo_cuenta,
+			let transferenciaInsert: Transferencia = {
+				nombre: transferencia.nombre,
+				banco: transferencia.banco,
+				email: transferencia.email,
+				rut_destinatario: transferencia.rut_destinatario,
+				monto: transferencia.monto,
+				tipo_cuenta: transferencia.tipo_cuenta,
 			};
 
-			let doc = await UserModel.updateOne({ rut: params.rut }, { $push: { transferencia } });
+			let doc = await UserModel.updateOne({ rut: rutCliente }, { $push: { transferencia: transferenciaInsert } });
+			console.log(doc);
+			if (doc.ok == 1) {
+				return true;
+			}
+			return false;
 		} catch (error) {
 			console.error(error.message);
 		}
@@ -130,12 +145,12 @@ export class UserModel {
 	 * @param params
 	 * @return Promise any
 	 */
-	public async buscarDestinatarios(params: any): Promise<any> {
+	public async buscarDestinatarios(rut: any): Promise<any> {
 		try {
 			//* Crear el modelo UserModel
 			let UserModel = model<User>('User', UserSchema.default);
 
-			let doc = await UserModel.findOne({ rut: params.rut }).exec();
+			let doc = await UserModel.findOne({ rut }).exec();
 
 			if (null !== doc) {
 				//*Se encontraron los destinatarios de la persona que quiere hacer la transferencia
@@ -158,7 +173,7 @@ export class UserModel {
 			//* Crear el modelo UserModel
 			let UserModel = model<User>('User', UserSchema.default);
 
-			let doc = await UserModel.findOne({ rut: params.rut }).exec();
+			let doc = await UserModel.findOne({ rut: params }).exec();
 
 			if (null !== doc) {
 				//*Se encontraron el historial de transferencia

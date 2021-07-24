@@ -1,1 +1,168 @@
-<p>transferencias works!</p>
+<div class="container">
+	<div class=" text-center mt-5 ">
+		<h1>Realizar Transferencia</h1>
+		<mat-form-field>
+			<input type="text"
+			placeholder="Nombre del destinatario"
+			matInput [formControl]="busquedaControl"
+			(change)="selectedOne($event)"
+			[matAutocomplete]="auto"
+			>
+			<mat-autocomplete #auto="matAutocomplete">
+				<mat-option *ngFor="let option of filteredOptions  | async" [value]="option.nombre">
+					{{option.nombre}}
+				</mat-option>
+			</mat-autocomplete>
+		</mat-form-field>
+	</div>
+	<div class="row ">
+		<div class="col-lg-7 mx-auto">
+			<div class="card mt-2 mx-auto p-4 bg-light">
+				<div class="card-body bg-light">
+					<div class="container">
+						<form id="msform" autocomplete="off" (ngSubmit)="enviarTranferencia()" [formGroup]="datosTransferencia">
+							<!--<fieldset disabled>-->
+								<div class="controls">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<!--Nombre-->
+												<label class="fieldlabels">Nombre:</label>
+												<input
+													type="text"
+													class="form-control"
+													placeholder="Nombre"
+													formControlName="nombre"
+
+												/>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<!--RUT-->
+												<label class="fieldlabels">RUT: </label>
+												<input
+													type="text"
+													class="form-control"
+													formControlName="rut_destinatario"
+													placeholder="RUT"
+
+												/>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<!-- EMAIL -->
+												<label for="" class="fieldlabels"> Email: </label>
+												<input
+													type="email"
+													class="form-control"
+													placeholder="Email"
+													formControlName="email"
+
+												/>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<!-- Cuenta -->
+												<label for="" class="fieldlabels text-right"> Cuenta: </label>
+												<input
+													type="text"
+													class="form-control"
+													placeholder="Fono"
+													formControlName="tipo_cuenta"
+
+												/>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<!-- BANCO -->
+												<label for="" class="fieldlabels text-right"> Banco: </label>
+												<input
+													type="text"
+													class="form-control"
+													placeholder="Banco"
+													formControlName="banco"
+
+
+												/>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<!--Cuenta-->
+												<label class="fieldlabels">No. Cuenta: </label>
+												<input
+													type="text"
+													class="form-control"
+													placeholder="CLP"
+													formControlName="cuenta"
+
+												/>
+											</div>
+										</div>
+									</div>
+								</div>
+							<!-- </fieldset> -->
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										<!--Monto-->
+										<label class="fieldlabels">Monto: *</label>
+										<small *ngIf="montoNoValido" class="danger">Monto debe ser mayor a 0</small>
+										<input
+											type="number"
+											class="form-control"
+											placeholder="CLP"
+											formControlName="monto"
+											[class.is-invalid]="montoNoValido"
+
+										/>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-12">
+									<div class="form-group">
+										<input
+											type="submit"
+											class="btn btn-success btn-send pt-2 btn-block"
+											value="Registrar"
+										/>
+									</div>
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div> <!-- /.8 -->
+		</div> <!-- /.row-->
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
