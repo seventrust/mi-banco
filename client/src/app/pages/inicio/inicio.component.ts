@@ -62,9 +62,7 @@ export class InicioComponent implements OnInit {
 	get emailNoValido() {
 		return this.datosRegistro.get('email')!.invalid && this.datosRegistro.get('email')!.touched;
 	}
-	get rutNoValidoLogin() {
-		return this.datosLogin.get('rut')!.invalid && this.datosLogin.get('rut')!.touched;
-	}
+
 	get passwordNoValidoLogin() {
 		return this.datosLogin.get('password')!.invalid && this.datosLogin.get('password')!.touched;
 	}
@@ -74,8 +72,12 @@ export class InicioComponent implements OnInit {
 	get passwordNoValidoRegistro() {
 		return this.datosRegistro.get('password')!.invalid && this.datosRegistro.get('password')!.touched;
 	}
+
 	get rutLogin() {
 		return this.datosLogin.get('rut') as FormControl;
+	}
+	get rutNoValidoLogin() {
+		return this.datosLogin.get('rut')!.invalid && this.datosLogin.get('rut')!.touched;
 	}
 
 	get rut() {
@@ -154,6 +156,7 @@ export class InicioComponent implements OnInit {
 		//Si el formulario no es valido entonces se hace una evaluación de cada uno
 		//de los elementos reactivos y se hace resaltar en la vista cuales son los
 		//elementos no validos
+		console.log(this.datosLogin.invalid);
 		if (this.datosLogin.invalid) {
 			return Object.values(this.datosLogin.controls).forEach((control) => {
 				if (control instanceof FormGroup) {
@@ -167,10 +170,8 @@ export class InicioComponent implements OnInit {
 					let data = response.body;
 					if (data) {
 						localStorage.setItem('login', JSON.stringify(data));
-						this.router.navigateByUrl('/historial', {
-							state: {
-								rut_cliente: data.rut,
-							},
+						this.router.navigate(['/historial']).then(() => {
+							console.log('NAGIGATE');
 						});
 					}
 				} else {
@@ -194,9 +195,36 @@ export class InicioComponent implements OnInit {
 				}
 			});
 		}
-		this._cs.registroUsuario(this.datosRegistro.value).then((response: HttpResponse<any>) => {
-			if (response.ok) {
-				Swal.fire(`Se ha creado tu usuario`);
+
+		//TODO: SwalFire
+		Swal.fire({
+			title: 'Deseas guardar el destinatario',
+			icon: 'warning',
+			confirmButtonText: 'Sí, guardar',
+			cancelButtonText: 'Cancelar',
+			showLoaderOnConfirm: true,
+			allowOutsideClick: false,
+			preConfirm: () => {
+				//El metodo preConfirm de Swal permite ejecutar una llamada ASYNC al servicio y esperar
+				//la respuesta para continuar con la ejecución
+				//Necesito recoger el rut del cliente
+
+				this._cs
+					.registroUsuario(this.datosRegistro.value)
+					.then((response: HttpResponse<any>) => {
+						if (response.ok) {
+							Swal.fire(`Se ha creado tu usuario`);
+							return response.body;
+						}
+					})
+					.catch((error) => {
+						console.error(error.message);
+					});
+			},
+		}).then((result) => {
+			if (result.isConfirmed) {
+				console.log(result.value);
+				Swal.fire({ title: `Los datos fueron guardados correctamente`, toast: true });
 			}
 		});
 	}

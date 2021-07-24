@@ -91,17 +91,27 @@ export class RegistrarComponent implements OnInit {
 
 	//Obtener los datos para los campos SELECT
 	private async getBankList() {
-		this._cs.getBankList().subscribe((response: ListaBancos) => {
-			if (response) {
-				this.bancos = response;
-				console.log('Registrar', JSON.stringify(this.bancos, null, 2));
-			} else {
-				Swal.fire({
-					title: 'Presentamos fallas en la comunicación',
-					toast: true,
-				});
-			}
-		});
+		let bancos = JSON.parse(localStorage.getItem('bancos') || '{}');
+		if (Object.keys(bancos).length > 0) {
+			this.bancos = bancos;
+		} else {
+			this._cs.getBankList().subscribe(
+				(response: ListaBancos) => {
+					if (response) {
+						this.bancos = response;
+						localStorage.setItem('bancos', JSON.stringify(this.bancos));
+						console.log('Registrar', JSON.stringify(this.bancos, null, 2));
+					}
+				},
+				(error: any) => {
+					Swal.fire({
+						title: 'Fallas en la comunicación',
+						text: `<p> ${error.message} <p>`,
+						toast: true,
+					});
+				}
+			);
+		}
 	}
 	/**
 	 * Metodo para instanciar el formulario Reactivo
@@ -179,6 +189,7 @@ export class RegistrarComponent implements OnInit {
 			if (result.isConfirmed) {
 				console.log(result.value);
 				Swal.fire(`Los datos fueron guardados correctamente`);
+				this.datosTransferencia.reset();
 				/* this.router.navigateByUrl('/', {
 					state: {
 						message: 'Todo OK, eres vergatario',

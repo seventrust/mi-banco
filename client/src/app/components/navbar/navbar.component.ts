@@ -17,8 +17,11 @@ export class NavbarComponent implements OnInit {
 	public cerrarSesion() {
 		console.log(`Me invocaron`);
 		localStorage.removeItem('login');
+		localStorage.removeItem('bancos');
 		this.loggedIn = false;
-		this.router.navigateByUrl('/inicio');
+		this.router.navigate(['/inicio']).then(() => {
+			window.location.reload();
+		});
 	}
 
 	private comprobarSesion() {

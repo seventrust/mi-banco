@@ -34,7 +34,7 @@ export class TransferenciaController {
 	public async nuevaTransferencia(rutCliente: any, transferencia: TransferenciaNueva): Promise<boolean> {
 		try {
 			//por ahora no puedo revisar  el estado de la actualizacion
-			if (!transferencia.rut_transferencia) {
+			if (!transferencia.rut_destinatario) {
 				return false;
 			}
 			let result = await this.usermodel.agregarNuevaTransferencia(rutCliente, transferencia);

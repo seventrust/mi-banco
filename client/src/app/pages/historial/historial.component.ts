@@ -14,33 +14,30 @@ export class HistorialComponent implements OnInit {
 	//Creamos el objeto historial para su posterior maipulación
 	public historial!: ListaHistorial;
 	public state!: any;
+	public rut!: any;
 	//Inyectamos las dependecias en el constructor
-	constructor(private _cs: ComunicationService, private activatedRoute: ActivatedRoute, private router: Router) {
-		this.state = this.router.getCurrentNavigation().extras.state;
-	}
+	constructor(private _cs: ComunicationService, private activatedRoute: ActivatedRoute, private router: Router) {}
 
 	ngOnInit(): void {
 		this.initHistorial();
 	}
 
 	private initHistorial() {
-		if (this.state != null) {
-			this.cargarHistorial(this.state.rut_cliente);
-		} else {
-			let login = JSON.parse(localStorage.getItem('login'));
+		let login = JSON.parse(localStorage.getItem('login') || '{}');
 
-			if (Object.keys(login).length > 0) {
-				this.cargarHistorial(login.usuario.rut);
-			}
+		if (Object.keys(login).length > 0) {
+			this.cargarHistorial(login.usuario.rut);
 		}
-		console.log('Historial', this.state.rut_cliente);
+
+		console.log('Historial', 'INIT');
 	}
 
 	private async cargarHistorial(rut: any) {
 		this._cs.obtenerHistorial(rut).subscribe(
-			(response: ListaHistorial) => {
+			(response: HttpResponse<ListaHistorial>) => {
 				if (response) {
-					this.historial = response;
+					this.historial = response.body;
+
 					console.log('Historial', JSON.stringify(this.historial, null, 2));
 				}
 			},

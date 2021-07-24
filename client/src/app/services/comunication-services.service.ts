@@ -57,8 +57,8 @@ export class ComunicationService {
 		});
 	}
 
-	public obtenerHistorial(rut: any): Observable<ListaHistorial> {
-		return this._client.get<ListaHistorial>(`${environment.apiUrl}/transferencias`, {
+	public obtenerHistorial(rut: any): Observable<HttpResponse<ListaHistorial>> {
+		return this._client.get<HttpResponse<ListaHistorial>>(`${environment.apiUrl}/transferencias`, {
 			params: {
 				rut: clean(rut),
 			},
@@ -74,6 +74,22 @@ export class ComunicationService {
 		});
 	}
 
+	public guardarTransferencia(rut_cliente: any, data: any): Promise<HttpResponse<any>> {
+		return this._client
+			.post<HttpResponse<any>>(
+				`${environment.apiUrl}/transferencias`,
+				{
+					rut_destinatario: clean(data.rut_destinatario.trim()),
+					rut_cliente: rut_cliente,
+					nombre: data.nombre.trim(),
+					banco: data.banco.trim(),
+					tipo_cuenta: data.tipo_cuenta.trim(),
+					monto: data.monto,
+				},
+				{}
+			)
+			.toPromise();
+	}
 	public registroUsuario(data: any): Promise<HttpResponse<any>> {
 		return this._client
 			.post<HttpResponse<any>>(
@@ -82,7 +98,7 @@ export class ComunicationService {
 					nombre: data.nombre.trim(),
 					email: data.email.trim(),
 					rut: clean(data.rut.trim()),
-					password: data.rut.trim(),
+					password: data.password.trim(),
 				},
 				{}
 			)

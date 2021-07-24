@@ -14,9 +14,9 @@
 		</thead>
 		<tbody>
 		  <tr *ngFor="let hist of historial.historial; index as i">
-			<th scope="row">{{i}}</th>
+			<th scope="row">{{i+1}}</th>
 			<td>{{hist.nombre}}</td>
-			<td>{{hist.fecha}}</td>
+			<td>{{hist.fecha | date :'short':'es'}}</td>
 			<td>{{hist.banco}}</td>
 			<td>{{hist.monto | currency : 'CLP' }}</td>
 		  </tr>

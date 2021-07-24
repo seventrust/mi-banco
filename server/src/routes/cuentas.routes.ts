@@ -20,6 +20,7 @@ export class Cuentas {
 					if (null != rut && rut.length > 0) {
 						let resultGet: Destinatarios[] = (await this.cuentasController.obtenerDestinatarios(rut)) || [];
 						//* Validar si el resultado devolvio valores
+						console.log(resultGet);
 						if (Object.keys(resultGet).length > 0) {
 							res.status(200).send({
 								ok: true,
