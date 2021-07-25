@@ -1,20 +1,5 @@
-<!-- <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
-	<div class="container-fluid">
-
-	  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-		<div class="navbar-nav">
-		  <a class="nav-link" routerLink="inicio" routerLinkActive="active">Mi Banco</a>
-		  <a class="nav-link" routerLink="transferencias" routerLinkActive="active">Transferencias</a>
-		  <a class="nav-link" routerLink="registrar" routerLinkActive="active">Nuevo Destinatario</a>
-		  <a class="nav-link" routerLink="historial" routerLinkActive="active">Historial</a>
-
-		</div>
-	  </div>
-	</div>
-  </nav> -->
-
   <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
 	<!-- Container wrapper -->
 	<div class="container-fluid">
 	  <!-- Toggle button -->
@@ -27,7 +12,7 @@
 		aria-expanded="false"
 		aria-label="Toggle navigation"
 	  >
-		<i class="fas fa-bars"></i>
+		<i class="fa fa-bars"></i>
 	  </button>
 
 	  <!-- Collapsible wrapper -->
@@ -44,16 +29,16 @@
 		<!-- Left links -->
 		<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 		  <li class="nav-item">
-			<a class="nav-link" routerLink="inicio" routerLinkActive="active" >Mi Banco</a>
+			<a class="nav-link" routerLink="inicio" routerLinkActive="active">Mi Banco</a>
 		  </li>
 		  <li class="nav-item">
-			<a class="nav-link" routerLink="transferencias" routerLinkActive="active">Transferencias </a>
+			<a class="nav-link" routerLink="transferencias" routerLinkActive="active" [class.disabled]="!loggedIn">Transferencias </a>
 		  </li>
 		  <li class="nav-item">
-			<a class="nav-link" routerLink="registrar" routerLinkActive="active">Nuevo Destinatario</a>
+			<a class="nav-link" routerLink="registrar" routerLinkActive="active" [class.disabled]="!loggedIn">Nuevo Destinatario</a>
 		  </li>
 		  <li class="nav-item">
-			<a class="nav-link" routerLink="historial" routerLinkActive="active">Historial</a>
+			<a class="nav-link" routerLink="historial" routerLinkActive="active" [class.disabled]="!loggedIn">Historial</a>
 		  </li>
 		</ul>
 		<!-- Left links -->
@@ -75,3 +60,4 @@
 	<!-- Container wrapper -->
   </nav>
   <!-- Navbar -->
+

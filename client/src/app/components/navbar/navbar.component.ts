@@ -25,8 +25,9 @@ export class NavbarComponent implements OnInit {
 	}
 
 	private comprobarSesion() {
-		let login = localStorage.getItem('login');
-		if (login.length > 0) {
+		let login = JSON.parse(localStorage.getItem('login') || '{}');
+		console.log('Login', JSON.stringify(login, null, 2) + Object.keys(login).length);
+		if (Object.keys(login).length > 0) {
 			this.loggedIn = true;
 		}
 	}

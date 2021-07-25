@@ -171,7 +171,7 @@ export class InicioComponent implements OnInit {
 					if (data) {
 						localStorage.setItem('login', JSON.stringify(data));
 						this.router.navigate(['/historial']).then(() => {
-							console.log('NAGIGATE');
+							window.location.reload();
 						});
 					}
 				} else {

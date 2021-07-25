@@ -13,7 +13,7 @@ export class UserModel {
 	 */
 	private async conexionMongo() {
 		try {
-			await connect('mongodb://localhost:27017/mi-banco', {
+			await connect('mongodb://mongo-db:27017/mi-banco', {
 				useNewUrlParser: true,
 				useUnifiedTopology: true,
 			});
@@ -137,6 +137,7 @@ export class UserModel {
 			return false;
 		} catch (error) {
 			console.error(error.message);
+			return false;
 		}
 	}
 
