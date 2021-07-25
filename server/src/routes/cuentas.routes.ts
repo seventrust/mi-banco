@@ -17,7 +17,7 @@ export class Cuentas {
 			case 'GET':
 				try {
 					let { rut } = req.query;
-					if (null != rut && rut.length > 0) {
+					if (null != rut) {
 						let resultGet: Destinatarios[] = (await this.cuentasController.obtenerDestinatarios(rut)) || [];
 						//* Validar si el resultado devolvio valores
 						console.log(resultGet);

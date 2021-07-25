@@ -17,7 +17,7 @@ export class Transferencias {
 			case 'GET':
 				try {
 					let { rut } = req.query;
-					if (null != rut && rut.length > 0) {
+					if (null != rut) {
 						let resultGet: Transferencia[] =
 							(await this.transferenciaController.obtenerTransferencias(rut)) || [];
 
