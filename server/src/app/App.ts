@@ -1,5 +1,6 @@
 'use strict';
 import { json, urlencoded } from 'body-parser';
+import cors from 'cors';
 import express from 'express';
 import { Usuario } from '../routes/usuario.routes';
 import { Cuentas } from '../routes/cuentas.routes';
@@ -52,7 +53,7 @@ class Server {
 		//Use del body-parser para manejar JSON de entrada
 		this.app.use(json());
 		this.app.use(urlencoded({ extended: true }));
-
+		this.app.use(cors());
 		// Caputar el error 404
 		this.app.use(function (err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
 			//var error = new Error("Not Found")
